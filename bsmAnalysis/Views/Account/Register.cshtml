@@ -1,0 +1,40 @@
+﻿@model bsmAnalysis.Models.RegisterModel
+@{
+    ViewBag.Title = "أشتـــــرك";
+}
+
+<hgroup class="title">
+    <h1 style="padding:50px">@ViewBag.Title</h1>
+    @*<h2>Create a new account.</h2>*@
+</hgroup>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Registration Form</legend>
+        <ol>
+            <li>
+                <label for="UserName">أسم المستخدم</label>
+                @*@Html.LabelFor(m => m.UserName)*@
+                @Html.TextBoxFor(m => m.UserName)
+            </li>
+            <li>
+                <label for="Password">كلمه السر</label>
+             @*   @Html.LabelFor(m => m.Password)*@
+                @Html.PasswordFor(m => m.Password)
+            </li>
+            <li>
+                <label for="ConfirmPassword">تأكيد كلمه السر</label>
+               @* @Html.LabelFor(m => m.ConfirmPassword)*@
+                @Html.PasswordFor(m => m.ConfirmPassword)
+            </li>
+        </ol>
+        <input type="submit" value="Register" />
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

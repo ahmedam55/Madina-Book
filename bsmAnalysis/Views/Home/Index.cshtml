@@ -1,0 +1,384 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@section featured {
+    
+<input id="UserId" type="hidden" value=@ViewBag.UserId />
+<!-- Modal -->
+<div id="setProfilePic" class="modal hide fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">غيّر صورتك الشخصيه</h3>
+    
+  </div>
+  <!---------------------------------->
+  <div class="modal-body">
+    
+    <form id="uploadPic" action="/Home/uploadPic" method="post" enctype="multipart/form-data">
+ 
+    <label for="photo">أضف صورة:</label>
+    <input type="file" name="photo" id="photo"> 
+        <input type="hidden" name="Isprofile" value="true" >
+    <input type="submit" value="Upload">
+</form>
+<div id="uploadResult"></div>
+    
+  </div>
+    <!---------------------------------->
+  <div class="modal-footer">
+    
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+   @* <button class="btn btn-primary">Save changes</button>*@
+    
+  </div>
+   <!---------------------------------->
+</div>
+    <!-- Modal -->
+<div id="sendMessage" class="modal hide fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">إرسال رساله</h3>
+    
+  </div>
+  <!---------------------------------->
+  <div class="modal-body">
+    
+   <textarea id="messageBody"  onkeydown="autoResize(event)" style="width:95%"></textarea>
+
+    
+  </div>
+    <!---------------------------------->
+  <div class="modal-footer">
+    
+    <button class="btn" data-dismiss="modal" aria-hidden="true">إغلاق</button>
+   <button id="sendMessageButton" class="btn btn-primary">إرسال</button>
+    
+  </div>
+   <!---------------------------------->
+</div>
+       <!-- Modal -->
+<div align="right" id="makeGroup" class="modal hide fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel" >إنشاء مجموعه</h3>
+    
+  </div>
+  <!---------------------------------->
+  <div class="modal-body">
+    
+   أسم المجموعه<textarea id="groupName"  onkeydown="autoResize(event)" style="width:95%"></textarea>
+
+    
+  </div>
+    <!---------------------------------->
+  <div class="modal-footer">
+    
+    <button class="btn" data-dismiss="modal" aria-hidden="true">إغلاق</button>
+   <button id="makeGroupButton" class="btn btn-primary">إنشاء</button>
+    
+  </div>
+   <!---------------------------------->
+</div>
+
+    <!--profile-->
+    <div  id="profile" class="modal hide fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">إرسال رساله</h3>
+    
+  </div>
+  <!---------------------------------->
+  <div class="modal-body">
+    <div ng-hide="profileData.friends.length==0" class="alert alert-info  fade in" align="center">
+           @* <button type="button" class="close" data-dismiss="alert">×</button>*@
+            <h4 class="alert-heading">الأصدقاء{{profileData.friends.length}}</h4>
+<div class="btn-group " ng-repeat="result in profileData.friends">
+                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown"> {{result.UserName}} <span class="caret"></span></button>
+                <ul class="dropdown-menu"> 
+                     <li><a  href="#profile" ng-click="profilePage(result.UserId)" data-toggle="modal" >الصفحه الشخصيه</a></li>               
+                  <li><a   href="#sendMessage" data-toggle="modal" ng-click="sendtoid(result.UserId)" >أرسال رساله له</a></li>
+                  <li><a class="requestFriendship" ng-click="sendtoid(result.UserId)" >إرسل طلب صداقه</a></li>
+                <li><a class="removeRequestFriendship" ng-click="sendtoid(result.UserId)" >سحب طلب صداقه</a></li>
+                 <li><a class="deleteFriend" ng-click="sendtoid(result.UserId)" >إلغاء الصداقه</a></li>
+                 
+                </ul>
+              </div>
+          
+</div>
+      <div ng-hide="profileData.groups.length==0" class="alert alert-success  fade in" align="center">
+         @*  <button type="button" class="close" data-dismiss="alert">×</button>*@
+            <h4 class="alert-heading">المجموعات{{profileData.groups.length}}</h4>
+         <div class="btn-group " ng-repeat="result in profileData.groups">
+                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown"> {{result.name}} <span class="caret"></span></button>
+                <ul class="dropdown-menu">                
+                 @* <li><a   href="#sendMessage" data-toggle="modal" ng-click="sendtoid(result.GroupId)" >أرسال رساله له</a></li>*@
+                  <li><a class="requestSubscribtion" ng-click="sendtoid(result.GroupId)" >إرسل طلب إنضمام</a></li>
+                <li><a class="removeRequestSubscribtion" ng-click="sendtoid(result.GroupId)" >سحب  طلب إنضمام</a></li>
+                 <li><a  ng-click="leaveGroup(result.GroupId)" >مغادرة المجموعه</a></li>
+                  
+                </ul>
+              </div>
+          </div>
+       <div ng-hide="profileData.photos.length==0" class="alert alert-primary  fade in" align="center">
+          @* <button type="button" class="close" data-dismiss="alert">×</button>*@
+            <h4 class="alert-heading">الصور{{profileData.photos.length}}</h4>
+        <img src="{{profileData.photos.pictureUrl}}" />
+          </div>
+ <dl ng-repeat="post in profileData.messages|orderBy:'MessageId':true">
+      <div ng-hide="post.sharer.UserId=='-1'||post.sharer.UserId==null">
+   <dt ><img  class="img-rounded" src={{post.sharer.profilePic}}> &nbsp;
+      <div class="btn-group ">
+                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown"> {{post.sharer.UserName}}شارك  <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="#setProfilePic" data-toggle="modal">غيّر صورتك الشخصيه</a></li>
+        <li><a href="#profile"  ng-click="profilePage(post.sharer.UserId)" data-toggle="modal" >الصفحه الشخصيه</a></li> 
+                  <li><a   href="#sendMessage" data-toggle="modal" ng-click="sendtoid(post.sharer.UserId)" >أرسال رساله له</a></li>
+                  <li><a class="requestFriendship" ng-click="sendtoid(post.sharer.UserId)" >إرسل طلب صداقه</a></li>
+                <li><a class="removeRequestFriendship" ng-click="sendtoid(post.sharer.UserId)" >سحب طلب صداقه</a></li>
+                 <li><a class="deleteFriend" ng-click="sendtoid(post.sharer.UserId)" >إلغاء الصداقه</a></li>
+                 @* <li class="divider"></li>
+                  <li><a href="#">Separated link</a></li>*@
+                </ul>
+              </div>
+     </dt>  
+   </div>
+  <dt><img  class="img-rounded" src={{post.writer.profilePic}}> &nbsp;
+      <div class="btn-group ">
+                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown"> {{post.writer.UserName}} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="#setProfilePic" data-toggle="modal">غيّر صورتك الشخصيه</a></li>
+        <li><a href="#profile"  ng-click="profilePage(post.writer.UserId)" data-toggle="modal" >الصفحه الشخصيه</a></li> 
+                  <li><a   href="#sendMessage" data-toggle="modal" ng-click="sendtoid(post.writer.UserId)" >أرسال رساله له</a></li>
+                  <li><a class="requestFriendship" ng-click="sendtoid(post.writer.UserId)" >إرسل طلب صداقه</a></li>
+                <li><a class="removeRequestFriendship" ng-click="sendtoid(post.writer.UserId)" >سحب طلب صداقه</a></li>
+                 <li><a class="deleteFriend" ng-click="sendtoid(post.writer.UserId)" >إلغاء الصداقه</a></li>
+                
+                </ul>
+              </div>
+     </dt>
+    
+    <div class="msg" style="padding-left:4em">
+  <dd><img src="{{post.messagePicture[0]}}"><div ng-bind-html="post.body"></div></dd>
+       
+        
+  &nbsp;&nbsp;<i  ilike="" class="icon-thumbs-up">
+
+              </i><a   title="" class="head">{{post.usersLiked.length}}<b class="like" ng-repeat="ul in post.usersLiked">{{ul.UserName}}</b></a>
+        &nbsp;
+        <i ng-click="shareMessage(post)" class="icon-share"></i><a   title="" class="head">{{post.usersShared.length}}<b class="like" ng-repeat="ul in post.usersShared">{{ul.UserName}}</b></a>
+        &nbsp;{{post.timeAdded}}<a title="delete message!"><i ng-click="deleteMessage(post)" class="icon-remove"></a></i>
+  <ul><a ng-click="showC('kly')">show/hide comments</a><li ng-repeat="comment in post.Comments" ng-show="showC(post.Comments.length)"><img src={{comment.writer.profilePic}}> &nbsp;{{comment.writer.UserName}}<br />{{comment.body}}<br /><i ilikec="" class="icon-thumbs-up"></i><a   title="" class="head">{{comment.usersLiked.length}}<b class="like" ng-repeat="ul in comment.usersLiked">{{ul.UserName}}</b></a>{{comment.timeAdded}}<a title="delete comment!"><i ng-click="deleteComment($index,comment.CommentId)" class="icon-remove"></a></i></li></ul> 
+   <textarea onkeydown="autoResize(event)"  class="comment" rows="1" on-enter="addcomment($scope,item)" ></textarea></div>
+</dl>
+
+    
+  </div>
+    <!---------------------------------->
+  <div class="modal-footer">
+    
+    <button class="btn" data-dismiss="modal" aria-hidden="true">إغلاق</button>
+   <button id="sendMessageButton" class="btn btn-primary">إرسال</button>
+    
+  </div>
+   <!---------------------------------->
+</div>
+   
+} 
+<input placeholder="إبحث عن أشخاص أو مجموعات :)" ng-model="query" /><br /><br />
+<div ng-hide="query==''" class="alert alert-info  fade in" align="center">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <h4 class="alert-heading">نتائج البحث</h4>
+           
+              <div class="btn-group " ng-repeat="result in results.groups">
+                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown"> {{result.name}} <span class="caret"></span></button>
+                <ul class="dropdown-menu">                
+                 @* <li><a   href="#sendMessage" data-toggle="modal" ng-click="sendtoid(result.GroupId)" >أرسال رساله له</a></li>*@
+                  <li><a class="requestSubscribtion" ng-click="sendtoid(result.GroupId)" >إرسل طلب إنضمام</a></li>
+                <li><a class="removeRequestSubscribtion" ng-click="sendtoid(result.GroupId)" >سحب  طلب إنضمام</a></li>
+                 <li><a  ng-click="leaveGroup(result.GroupId)" >مغادرة المجموعه</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                </ul>
+              </div>
+<div class="btn-group " ng-repeat="result in results.users">
+                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown"> {{result.UserName}} <span class="caret"></span></button>
+                <ul class="dropdown-menu"> 
+                     <li><a  href="#profile" ng-click="profilePage(result.UserId)" data-toggle="modal" >الصفحه الشخصيه</a></li>               
+                  <li><a   href="#sendMessage" data-toggle="modal" ng-click="sendtoid(result.UserId)" >أرسال رساله له</a></li>
+                  <li><a class="requestFriendship" ng-click="sendtoid(result.UserId)" >إرسل طلب صداقه</a></li>
+                <li><a class="removeRequestFriendship" ng-click="sendtoid(result.UserId)" >سحب طلب صداقه</a></li>
+                 <li><a class="deleteFriend" ng-click="sendtoid(result.UserId)" >إلغاء الصداقه</a></li>
+                 
+                </ul>
+              </div>
+          
+</div>
+
+ <div ng-hide="posts.GroupId==null" class="btn-toolbar" style="margin: 0;">
+              <div class="btn-group">
+                <button class="btn dropdown-toggle" data-toggle="dropdown">{{posts.name}}<b ng-hide="posts.requestingMembers.length==0" style="color:red">{{posts.requestingMembers.length}}</b> <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+
+                       <li ng-hide="posts.requestingMembers.length==0" class="dropdown-submenu">
+                    <a tabindex="-1" href="#">طلبات الإنضمام</a>
+                    <ul class="dropdown-menu">
+                      <li><a tabindex="-1" ng-repeat="member in posts.requestingMembers"  ng-click="acceptSubscribtion(member.UserId,posts.GroupId,$index)"><img src="{{member.profilePic}}" />{{member.UserName}}قبول </a></li>                     
+                    </ul>
+                  </li>
+                  <li class="dropdown-submenu">
+                    <a tabindex="-1" href="#">الأعضاء</a>
+                    <ul class="dropdown-menu">
+                      <li><a tabindex="-1" ng-repeat="member in posts.members" ng-click="disagreeSubscribtion(member.UserId,posts.GroupId,$index)"><img src="{{member.profilePic}}" />{{member.UserName}} إزاله عضويه</a></li>                     
+                    </ul>
+                  </li>
+                 <li><a  ng-click="leaveGroup(posts.GroupId)" >مغادرة المجموعه</a></li>
+                </ul>
+              </div><!-- /btn-group -->
+              
+            </div>
+<br />
+    
+
+<div class="links">
+    
+   <div class="dropdown clearfix links">
+              <ul   class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 5px; *width: 180px;">
+                  <li><a href="~/" tabindex="-1" href="">الحائط:)</a></li>                
+               <li><a ng-repeat="group in posts.groups" tabindex="-1" href="#/g{{group.GroupId}}">{{group.name}}</a></li>                
+              </ul>
+            </div>
+
+</div>
+<div class="onlineFriends" ng-hide="onlineFriends.length==0">
+    
+   <div class="dropdown clearfix links">
+              <ul   class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 5px; *width: 180px;">
+              <li><a ng-repeat="user in onlineFriends" tabindex="-1" ng-click="chat(user)" @*href="#/g{{group.GroupId}}"*@>{{user.UserName}}</a></li>                
+              </ul>
+            </div>
+
+</div>
+<div class="chat" >
+    
+<div class="well well-small">
+    
+  <div onclick="$('.chatHiddable').slideToggle()">{{chatRecieverName}}</div>
+    <div class="chatHiddable">
+    <div ng-repeat="message in dialouge"><b>{{message.writer.UserName}}:</b>{{message.body}}</div>
+     
+        <textarea id="chatText" type="text" ></textarea>
+    
+    </div>
+</div>
+
+</div>
+<button class="btn btn-primary btn-medium" href="#makeGroup" data-toggle="modal">إنشاء مجموعه</button>
+
+<!--recived messages-->
+    <ul class="nav nav-pills">           
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-envelope icon-blue"></i> <b ng-hide="conversations.length==0">{{conversations.length}}</b></a>
+                <ul  class="dropdown-menu">
+                  <li ng-repeat="message in conversations"><a >أرسل{{message.writer.UserName}} رساله لك  عند {{message.timeAdded}}</a>
+                      &nbsp;&nbsp;&nbsp;{{message.body}}
+                      </li>
+                  
+              
+                </ul>
+              </li>
+            </ul>
+<!--recived requests-->
+    <ul class="nav nav-pills" >           
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i><b ng-hide="requests.length==0">{{requests.length}}</b> </a>
+                <ul class="dropdown-menu">
+                  <li  ng-repeat="request in requests"><a  ng-click="acceptFriendship(request.UserId,$index)" >{{request.UserName}}أقبل صداقة</a>
+                      
+                  </li>
+              
+                </ul>
+              </li>
+            </ul>
+
+
+  
+
+ <br>
+<textarea  onkeydown="autoResize(event)" id="msg" placeholder="أكتب شيئـــــــا" rows="3" style="float:initial"></textarea>
+  <button id="share" class="btn btn-primary">شارك</button>
+  <div class="container"> 
+<dl ng-repeat="post in posts.messages|orderBy:'MessageId':true">
+    <div ng-hide="post.sharer.UserId=='-1'||post.sharer.UserId==null">
+   <dt ><img  class="img-rounded" src={{post.sharer.profilePic}}> &nbsp;
+      <div class="btn-group ">
+                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown"> {{post.sharer.UserName}}شارك  <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="#setProfilePic" data-toggle="modal">غيّر صورتك الشخصيه</a></li>
+        <li><a href="#profile"  ng-click="profilePage(post.sharer.UserId)" data-toggle="modal" >الصفحه الشخصيه</a></li> 
+                  <li><a   href="#sendMessage" data-toggle="modal" ng-click="sendtoid(post.sharer.UserId)" >أرسال رساله له</a></li>
+                  <li><a class="requestFriendship" ng-click="sendtoid(post.sharer.UserId)" >إرسل طلب صداقه</a></li>
+                <li><a class="removeRequestFriendship" ng-click="sendtoid(post.sharer.UserId)" >سحب طلب صداقه</a></li>
+                 <li><a class="deleteFriend" ng-click="sendtoid(post.sharer.UserId)" >إلغاء الصداقه</a></li>
+                 @* <li class="divider"></li>
+                  <li><a href="#">Separated link</a></li>*@
+                </ul>
+              </div>
+     </dt>  
+   </div>
+  <dt><img  class="img-rounded" src={{post.writer.profilePic}}> &nbsp;
+      <div class="btn-group ">
+                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown"> {{post.writer.UserName}} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="#setProfilePic" data-toggle="modal">غيّر صورتك الشخصيه</a></li>
+        <li><a href="#profile"  ng-click="profilePage(post.writer.UserId)" data-toggle="modal" >الصفحه الشخصيه</a></li> 
+                  <li><a   href="#sendMessage" data-toggle="modal" ng-click="sendtoid(post.writer.UserId)" >أرسال رساله له</a></li>
+                  <li><a class="requestFriendship" ng-click="sendtoid(post.writer.UserId)" >إرسل طلب صداقه</a></li>
+                <li><a class="removeRequestFriendship" ng-click="sendtoid(post.writer.UserId)" >سحب طلب صداقه</a></li>
+                 <li><a class="deleteFriend" ng-click="sendtoid(post.writer.UserId)" >إلغاء الصداقه</a></li>
+              @*    <li class="divider"></li>
+                  <li><a href="#">Separated link</a></li>*@
+                </ul>
+              </div>
+     </dt>
+    
+    <div class="msg" style="padding-left:4em">
+  <dd><img src="{{post.messagePicture[0]}}"><div ng-bind-html="post.body"></div></dd>
+       
+        
+  &nbsp;&nbsp;<i  ilike="" class="icon-thumbs-up">
+
+              </i><a   title="" class="head">{{post.usersLiked.length}}<b class="like" ng-repeat="ul in post.usersLiked">{{ul.UserName}}</b></a>
+        &nbsp;
+        <i class="icon-share" ng-click="shareMessage(post)"></i><a   title="" class="head">{{post.usersShared.length}}<b class="like" ng-repeat="ul in post.usersShared">{{ul.UserName}}</b></a>
+        &nbsp;{{post.timeAdded}}<a title="delete message!"><i ng-click="deleteMessage(post)" class="icon-remove"></a></i>
+  <ul><a ng-click="showC('kly')">show/hide comments</a><li ng-repeat="comment in post.Comments" ng-show="showC(post.Comments.length)"><img src={{comment.writer.profilePic}}> &nbsp;{{comment.writer.UserName}}<br />{{comment.body}}<br /><i ilikec="" class="icon-thumbs-up"></i><a   title="" class="head">{{comment.usersLiked.length}}<b class="like" ng-repeat="ul in comment.usersLiked">{{ul.UserName}}</b></a>{{comment.timeAdded}}<a title="delete comment!"><i ng-click="deleteComment($index,comment.CommentId)" class="icon-remove"></a></i></li></ul> 
+   <textarea onkeydown="autoResize(event)"  class="comment" rows="1" on-comment-enter="addcomment($scope,item)" ></textarea></div>
+</dl>
+</div>          
+
+
+ <!--Add script to update the page and send messages.--> 
+    <script type="text/javascript">
+        $(function () {
+
+
+            //// Start the connection.
+            //$.connection.hub.start().done(function () {
+            //    $('#sendmessage').click(function () {
+            //        // Call the Send method on the hub. 
+            //        chat.server.send($('#displayname').val(), $('#message').val());
+            //        // Clear text box and reset focus for next comment. 
+            //        $('#message').val('').focus();
+            //    });
+            //});
+        });
+    </script>
+<!--Reference the SignalR library. -->
+    <script src="~/Scripts/jquery.signalR-1.1.0-beta1.min.js"></script>
+    <!--Reference the autogenerated SignalR hub script. -->
+    <script src="~/signalr/hubs"></script>
+        <script src="~/Scripts/js.js"></script>

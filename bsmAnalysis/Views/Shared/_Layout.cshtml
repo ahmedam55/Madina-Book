@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="myController">
+    <head lang="en">
+        <meta charset="utf-8" />
+        <title>MadinaBook</title>
+        @*<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />*@
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+ <script src="http://code.jquery.com/jquery.min.js"></script>
+<link href="http://twitter.github.io/bootstrap/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+
+<script src="http://twitter.github.io/bootstrap/assets/js/bootstrap.js"></script>
+<script src="twitter-bootstrap-v2/docs/assets/js/bootstrap-alert.js"></script>  
+        <script src="http://code.angularjs.org/1.0.1/angular-sanitize-1.0.1.js"></script>
+  @*      <link type="text/css" rel="stylesheet" media="all" href="http://anantgarg.com/chat/css/chat.css" />
+<link type="text/css" rel="stylesheet" media="all" href="http://anantgarg.com/chat/css/screen.css" />*@
+        <link href='http://fonts.googleapis.com/css?family=Old+Standard+TT:400italic' rel='stylesheet' type='text/css'>
+       
+
+   
+        
+    </head>
+    <body>
+        <header>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p class="site-title">@Html.ActionLink("MadinaBook","Index", "Home")</p>
+                </div>
+                <div class="float-right">
+                    <section id="login">
+                        @Html.Partial("_LoginPartial")
+                    </section>
+                   @* <nav>
+                        <ul id="menu">
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                            <li>@Html.ActionLink("About", "About", "Home")</li>
+                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                        </ul>
+                    </nav>*@
+                </div>
+            </div>
+        </header>
+        <div id="body" >
+            @RenderSection("featured", required: false)
+            <section class="content-wrapper main-content clear-fix">
+                @RenderBody()
+               
+    <script src="~/Scripts/autosize.js"></script>
+               @*<script src="http://anantgarg.com/chat/js/chat.js"></script>*@
+                    
+            </section>
+        </div>
+        <footer>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    @*<p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>*@
+                </div>
+            </div>
+        </footer>
+      
+       @* @Scripts.Render("~/bundles/jquery")*@
+        @RenderSection("scripts", required: false)
+       @* <script src="~/Scripts/progressbar.js"></script>*@
+     <script src="http://malsup.github.io/jquery.form.js"> </script>  
+      
+    </body>
+</html>

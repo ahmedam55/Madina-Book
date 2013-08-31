@@ -1,0 +1,53 @@
+﻿@model bsmAnalysis.Models.LoginModel
+
+@{
+    ViewBag.Title = "تسجيل الدخول";
+}
+
+<hgroup  class="title">
+    <h1 style="padding:50px" >@ViewBag.Title</h1>
+</hgroup>
+
+<section id="loginForm" @*style="text-align:center" dir="rtl"*@>
+<h2></h2>
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Log in Form</legend>      
+        <ol>
+            <li>
+                <label for="UserName">أسم المستخدم</label>
+               @* @Html.LabelFor(m => m.UserName)*@
+                @Html.TextBoxFor(m => m.UserName)
+                @Html.ValidationMessageFor(m => m.UserName)
+            </li>
+            <li>
+                <label for="Password">كلمه السر</label>
+               @* @Html.LabelFor(m => m.Password)*@
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </li>
+            <li>
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @*@Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })*@
+                 <label class="checkbox" for="RememberMe">تذكرنى?</label>
+            </li>
+        </ol>
+        <input type="submit" value="سجّل الدخول" />
+    </fieldset>
+    <p>
+        @Html.ActionLink("إشترك :)", "Register") إذا لم يكن لديك حساب
+    </p>
+}
+</section>
+
+<section class="social" id="socialLoginForm">
+    <h2>§أستخدم طريقه أخرى للدخول§</h2>
+    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

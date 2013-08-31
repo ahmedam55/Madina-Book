@@ -1,0 +1,29 @@
+﻿@model bsmAnalysis.Models.Comment
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Comment</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Body)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Body)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.timePosted)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.timePosted)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.CommentId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
